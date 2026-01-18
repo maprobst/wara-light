@@ -146,8 +146,11 @@ def main():
     print(f"CSV file written to: {output_path}")
     print(f"Total entries written: {len(all_recommendations)}")
 
-    # Output the filename for use in GitHub Actions
-    print(f"::set-output name=csv_file::{output_filename}")
+    # Output the filename for use in GitHub Actions (using environment files)
+    github_output = os.environ.get('GITHUB_OUTPUT')
+    if github_output:
+        with open(github_output, 'a', encoding='utf-8') as f:
+            f.write(f"csv_file={output_filename}\n")
 
     return str(output_path)
 
