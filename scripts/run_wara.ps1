@@ -57,14 +57,6 @@ if (Test-Path -Path $srcPath) {
     }
 }
 
-# Create results directory if it doesn't exist
-$resultsPath = Join-Path -Path $PSScriptRoot -ChildPath ".." | Join-Path -ChildPath "results"
-if (-not (Test-Path -Path $resultsPath)) {
-    New-Item -ItemType Directory -Path $resultsPath -Force | Out-Null
-}
-
-Write-Host "`nResults will be saved to: $resultsPath" -ForegroundColor Green
-
 # Get environment variables for optional parameters
 $subscriptionId = $env:SUBSCRIPTION_ID
 $resourceGroup = $env:RESOURCE_GROUP
@@ -76,6 +68,20 @@ if ($subscriptionId) {
 if ($resourceGroup) {
     Write-Host "Resource Group: $resourceGroup" -ForegroundColor Gray
 }
+
+# Create results subdirectory with timestamp and subscription
+$timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+$subscriptionSuffix = if ($subscriptionId) { "_$subscriptionId" } else { "" }
+$subfolderName = "${timestamp}${subscriptionSuffix}"
+
+$resultsBasePath = Join-Path -Path $PSScriptRoot -ChildPath ".." | Join-Path -ChildPath "results"
+$resultsPath = Join-Path -Path $resultsBasePath -ChildPath $subfolderName
+
+if (-not (Test-Path -Path $resultsPath)) {
+    New-Item -ItemType Directory -Path $resultsPath -Force | Out-Null
+}
+
+Write-Host "`nResults will be saved to: $resultsPath" -ForegroundColor Green
 
 # ============================================================
 # Add your WARA script execution logic here
