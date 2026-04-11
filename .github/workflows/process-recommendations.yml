@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
 
   # Schedule: Run daily at 6:00 UTC
-  schedule:
-    - cron: '0 6 * * *'
+  # schedule:
+    # - cron: '0 6 * * *'
 
 permissions:
   contents: write
